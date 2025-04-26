@@ -1,0 +1,17 @@
+<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- White Circle -->
+    <circle cx="10.5" cy="10" r="8" stroke="#FFAD49" stroke-width="2" fill="none" />
+
+    <!-- Spinner Animation (Orange Line Overlay) -->
+    <path d="M10.5 1.99629C5.98026 2.04629 2.45629 5.68026 2.51629 10" stroke="#F73C01" stroke-width="2" stroke-linecap="round">
+        <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from="0 10.5 10.008"
+                to="360 10.5 10.008"
+                dur="1s"
+                repeatCount="indefinite"
+        />
+    </path>
+</svg>
